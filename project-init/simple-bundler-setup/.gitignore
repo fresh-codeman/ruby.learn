@@ -1,0 +1,33 @@
+
+# Ignore bundler dependencies
+/vendor/bundle
+
+# Ignore log files
+/log/*
+!log/.keep  # Keep the folder but ignore its contents
+
+# Ignore temporary files
+/tmp/*
+!tmp/.keep  # Keep the folder but ignore its contents
+
+# Ignore RubyMine/VSCode/Editor settings
+.idea/
+.vscode/
+*.swp
+*.swo
+*.sublime*
+
+# Ignore OS-specific files
+.DS_Store
+Thumbs.db
+
+# Ignore test coverage reports (SimpleCov)
+coverage/
+
+# Ignore RSpec-related files
+/spec/tmp
+/spec/examples.txt
+
+# Ignore Git-related files
+.git/
+
