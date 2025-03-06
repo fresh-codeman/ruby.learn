@@ -16,7 +16,13 @@
 # it.
 #
 # See https://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
+# 
+Dir["./spec/support/**/*.rb"].each { |f|  require f }
+require 'faker'
+
+# require_relative './support/factory_bot'
 RSpec.configure do |config|
+  # spec/spec_helper.rb
   # rspec-expectations config goes here. You can use an alternate
   # assertion/expectation library such as wrong or the stdlib/minitest
   # assertions if you prefer.

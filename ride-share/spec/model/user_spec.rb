@@ -1,6 +1,6 @@
-require_relative '../../model/rider'
+require_relative '../../model/user'
 
-RSpec.describe Rider do
+RSpec.describe User do
   let(:attrs) {
     {
       id: 'R1',
@@ -8,8 +8,7 @@ RSpec.describe Rider do
     }
   }
   subject {described_class.new(attrs)}
-
-  describe '#post_initialize' do
+  describe '#initialize' do
     it 'create new location' do
       expect(subject).to be_a(described_class)
     end
@@ -17,16 +16,15 @@ RSpec.describe Rider do
     it 'set the attributes' do
       expect(subject.id).to be(attrs[:id])
       expect(subject.location).to be(attrs[:location])
-      expect(subject.matches).to be(nil)
     end
   end
 
-  context 'when update matches' do
-    let(:matches)  { [build(:driver), build(:driver), build(:driver)] }
+  context 'when update location' do
+    let(:new_location)  {build(:location, x_coordinate: 10) }
 
     it 'sets the new location' do
-      subject.matches = matches
-      expect(subject.matches).to be(matches)
+      subject.location = new_location
+      expect(subject.location).to be(new_location)
     end
   end
 end
