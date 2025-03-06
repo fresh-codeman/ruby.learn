@@ -1,4 +1,7 @@
+require_relative '../db/database'
 class User
+  include Database
+
   attr_reader :id, :location
   attr_writer :location
   def initialize(attrs)

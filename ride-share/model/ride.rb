@@ -1,3 +1,5 @@
+require_relative '../db/database'
+
 module RideStatus
   ACCEPTED = :accepted
   ONGOING = :ongoing
@@ -5,6 +7,7 @@ module RideStatus
 end
 
 class Ride
+  include Database  
   attr_reader :id, :status, :driver, :rider, :destination_location, :time_taken
   def initialize(id)
     @id = id
