@@ -11,7 +11,7 @@ RSpec.describe RideController do
     context 'when rider id is invalid' do
       let(:rider_id) {'invalid'}
       it 'raises error' do
-        expect{described_class.start_ride(params)}.to raise_error(ArgumentError, "Rider not exists for rider_id: #{rider_id}")
+        expect{described_class.start_ride(params)}.to raise_error(InvalidRideError, "Rider not exists for rider_id: #{rider_id}")
       end
     end
 
@@ -19,9 +19,9 @@ RSpec.describe RideController do
       before { rider.matches = []}
       it 'raises error' do
         expect{described_class.start_ride(params)}.to raise_error do |error|
-          expect(error).to be_a(NoDriverAvailable)
+          expect(error).to be_a(InvalidRideError)
           expect(error.message).to eq("#{selected_driver_index}th driver do not exist")
-          expect(error.code).to eq("NO_DRIVERS_AVAILABLE")
+          expect(error.code).to eq("INVALID_RIDE")
         end
       end
     end
@@ -51,40 +51,67 @@ RSpec.describe RideController do
         expect(rider.matches).to be nil
         expect(Rider.get(rider.id).riding?).to be true
       end
+
+      it 'returns ride_id' do
+        expect(described_class.start_ride(params)[:ride_id]). to eq(ride_id)
+      end
     end
   end
   describe '#stop_ride' do
-    xcontext 'when ride id is invalid' do
+    let(:ride) { create_ongoing_ride }
+    let(:driver) {ride.driver}
+    let(:rider) {ride.rider}
+    let(:ride_id) { ride.id }
+    let(:destination_x_coordinate) { 2 }
+    let(:destination_y_coordinate) { 3 }
+    let(:time_taken_in_min) { 30 }
+    let(:params) { {ride_id:, destination_x_coordinate: , destination_y_coordinate:, time_taken_in_min:}}
+    context 'when ride id is invalid' do
       let(:ride_id) {'invalid'}
       it 'raises error' do
-        expect{described_class.stop_ride(params)}.to raise_error(ArgumentError, "Ride not exists for ride_id: #{ride_id}")
+        expect{described_class.stop_ride(params)}.to raise_error{ |error|
+          expect(error).to be_a(InvalidRideError)
+          expect(error.message).to eq("Ride not exists/available for ride_id: #{ride_id}")
+          expect(error.code).to eq('INVALID_RIDE')
+        }
       end
     end
 
-    xcontext 'when ride_id is valid but not available' do
+    context 'when ride_id is valid but not available' do
+      let(:ride) {create(:ride)}
       it 'raises error' do
-        expect{described_class.stop_ride(params)}.to raise_error do |error|
-        end
+        expect{described_class.stop_ride(params)}.to raise_error{ |error|
+          expect(error).to be_a(InvalidRideError)
+          expect(error.message).to eq("Ride not exists/available for ride_id: #{ride_id}")
+          expect(error.code).to eq('INVALID_RIDE')
+        }
       end
     end
 
-    xcontext 'when params are valid' do
+    context 'when params are valid' do
       it 'updates ride' do
-        expect(ride.status).to eq(RideStatus::ONGOING)
-        expect(ride.driver).to be(selected_driver)
-        expect(ride.rider).to be(rider)
+        described_class.stop_ride(params)
+        expect(ride.status).to eq(RideStatus::COMPLETED)
+        expect(ride.driver).to be(driver)
+        expect(ride.send(:destination_location).x_coordinate).to eq(destination_x_coordinate)
+        expect(ride.send(:destination_location).y_coordinate).to eq(destination_y_coordinate)
+        expect(ride.send(:time_taken)).to eq(time_taken_in_min)
       end
 
       it 'update driver status' do
-        described_class.stop_ride(params)
-        expect(selected_driver.driving?).to be true
-        expect(Driver.get(selected_driver.id).driving?).to be true
+        expect{described_class.stop_ride(params)}.to change{driver.location}
+        expect(driver.driving?).to be false
+        expect(driver.location).to be ride.send(:destination_location)
       end
 
       it 'update rider status' do
-        described_class.stop_ride(params)
-        expect(rider.riding?).to be true
-        expect(Rider.get(rider.id).riding?).to be true
+        expect{described_class.stop_ride(params)}.to change{rider.location}
+        expect(rider.riding?).to be false
+        expect(rider.location).to be ride.send(:destination_location)
+      end
+
+      it 'returns ride_id' do
+        expect(described_class.stop_ride(params)[:ride_id]). to eq(ride_id)
       end
     end
   end

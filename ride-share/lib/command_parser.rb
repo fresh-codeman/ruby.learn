@@ -1,4 +1,5 @@
 require 'configs/config'
+
 module CommandParser
   class << self
     include Config

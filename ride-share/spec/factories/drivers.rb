@@ -9,5 +9,13 @@ FactoryBot.define do
     trait :driver_at_origin do
       location {build(:location, :origin)}
     end
+
+    trait :driver_at_20_20 do
+      location {build(:location, :location_20_20)}
+    end
+    
+    trait :driver_at_3_2 do
+      location {build(:location, :location_3_2)}
+    end
   end
 end

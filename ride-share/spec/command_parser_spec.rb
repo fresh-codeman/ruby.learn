@@ -73,7 +73,7 @@ RSpec.describe CommandParser do
       let(:executed_command) {described_class.parse(command)}
       let(:expected_command){
         {
-          action: :match,
+          action: :match_drivers_to_rider,
           params: {
             rider_id: 'R1'
           }

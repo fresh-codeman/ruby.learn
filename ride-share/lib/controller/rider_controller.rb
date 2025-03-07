@@ -1,4 +1,7 @@
-require 'models_loader'
+require 'model/location'
+require 'model/driver'
+require 'model/rider'
+require 'model/ride'
 
 module RiderController
 

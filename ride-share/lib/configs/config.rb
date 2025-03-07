@@ -11,7 +11,7 @@ module Config
       x_coordinate: { index: 2, type: :integer},
       y_coordinate: { index: 3, type: :integer},
     },
-    match: {
+    match_drivers_to_rider: {
       rider_id: { index: 1, type: :string}
     },
     start_ride: {
@@ -33,13 +33,13 @@ module Config
     string: ->(value) { value.to_s },
     integer: ->(value) { value.to_i },
     float: ->(value) { value.to_f }
-}.freeze
+  }.freeze
   ACTION_PARSER_CONFIG = {
     'ADD_DRIVER' => :add_driver,
     'ADD_RIDER' => :add_rider,
-    'MATCH' => :match,
+    'MATCH' => :match_drivers_to_rider,
     'START_RIDE'=> :start_ride,
     'STOP_RIDE'=> :stop_ride,
     'BILL'=> :bill,
-}.freeze
+  }.freeze
 end

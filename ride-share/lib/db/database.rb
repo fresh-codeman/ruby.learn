@@ -17,8 +17,14 @@ module Database
 
   module ClassMethods
     def get(id=nil)
-      return data.values if id.nil?
-      data[id]
+      if id.nil?
+        return data.values unless block_given?
+        data.values.select{ |_obj| yield(_obj)}
+      else
+        return data[id] unless data[id]
+        return data[id] unless block_given?
+        return yield(data[id]) ? data[id] : nil
+      end
     end
 
     def count
