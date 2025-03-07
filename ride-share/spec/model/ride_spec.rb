@@ -1,4 +1,4 @@
-require_relative '../../model/ride'
+require './spec/spec_helper'
 
 RSpec.describe Ride do
   let(:ride_id) {'R1'}

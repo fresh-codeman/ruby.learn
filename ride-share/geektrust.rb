@@ -1,5 +1,7 @@
-$LOAD_PATH.unshift File.join(__dir__, 'lib')
-require_relative './lib/command_parser'
+# Add a custom directory to $LOAD_PATH
+$LOAD_PATH.unshift(File.expand_path('lib', __dir__))
+
+require 'command_parser'
 def main
   File.open(ARGV[1]) do |file|
     file.readlines.each do |line|

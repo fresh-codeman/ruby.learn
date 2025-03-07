@@ -17,11 +17,27 @@
 #
 # See https://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 # 
-Dir["./spec/support/**/*.rb"].each { |f|  require f }
+Dir["./spec/support/**/*.rb"].each { |f| require(f) }
+
+# load each file form the lib in rspec so we do not need to use any of it.
+Dir["./lib/**/*.rb"].each { |f| require(f) }
+
 require 'faker'
 
-# require_relative './support/factory_bot'
 RSpec.configure do |config|
+  config.before(:example) do
+    Object.constants.each do |constant|
+      klass = Object.const_get(constant)
+      if klass.is_a?(Class)
+        
+        if klass.included_modules.include?(Database)
+          klass.send(:reset_database)
+        end
+      end
+    rescue 
+      nil
+    end
+  end
   # spec/spec_helper.rb
   # rspec-expectations config goes here. You can use an alternate
   # assertion/expectation library such as wrong or the stdlib/minitest

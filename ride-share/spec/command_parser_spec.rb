@@ -1,4 +1,4 @@
-require_relative '../lib/command_parser'
+require './spec/spec_helper'
 
 RSpec.describe CommandParser do
   describe '#parse' do

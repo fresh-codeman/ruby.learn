@@ -1,4 +1,4 @@
-require_relative '../../model/driver'
+require 'model/driver'
 
 FactoryBot.define do
   factory :driver do

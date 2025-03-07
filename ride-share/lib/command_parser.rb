@@ -1,4 +1,4 @@
-require_relative '../config/config'
+require 'configs/config'
 module CommandParser
   class << self
     include Config

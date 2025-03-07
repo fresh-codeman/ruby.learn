@@ -14,6 +14,10 @@ module Database
       data[id]
     end
 
+    def reset_database
+      @data = {}
+    end
+
     def data
       @data ||={}
     end

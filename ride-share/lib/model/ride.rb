@@ -1,4 +1,4 @@
-require_relative '../db/database'
+require 'db/database'
 
 module RideStatus
   ACCEPTED = :accepted

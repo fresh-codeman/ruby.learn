@@ -1,4 +1,4 @@
-require_relative '../../model/user'
+require './spec/spec_helper'
 
 RSpec.describe User do
   let(:attrs) {
@@ -24,7 +24,6 @@ RSpec.describe User do
 
     it 'sets the new location' do
       subject.location = new_location
-      subject.save
       expect(subject.location).to be(new_location)
     end
   end

@@ -1,5 +1,5 @@
 # spec/factories/locations.rb
-require_relative "../../model/location"
+require "model/location"
 FactoryBot.define do
   factory :location do
     x_coordinate {Faker::Number.between(from: 1, to: 100)}

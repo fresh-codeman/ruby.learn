@@ -1,4 +1,4 @@
-require_relative '../../model/rider'
+require 'model/rider'
 
 FactoryBot.define do
   factory :rider do

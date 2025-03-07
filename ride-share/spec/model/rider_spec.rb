@@ -1,4 +1,4 @@
-require_relative '../../model/rider'
+require './spec/spec_helper'
 
 RSpec.describe Rider do
   let(:attrs) {

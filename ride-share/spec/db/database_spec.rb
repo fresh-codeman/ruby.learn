@@ -1,7 +1,7 @@
-require_relative '../../db/database'
+require './spec/spec_helper'
 
 RSpec.describe Database do
-  let(:dummyClass) {Struct.new(:id)}
+  let(:dummyClass) {Struct.new(:id,:status)}
 
   before do
     _ = dummyClass
@@ -31,6 +31,17 @@ RSpec.describe Database do
     before {driver_1.save; driver_2.save}
     it 'set the data for instances of base class' do
       expect(dummyClass.get(driver_1.id)).to eq(driver_1)
+    end
+
+  end
+
+  describe '#reset_database' do
+    let(:driver_1) {dummyClass.new('df1') }
+    let(:driver_2) {dummyClass.new('df1') }
+    before {driver_1.save; driver_2.save}
+    it 'resets the to empty array' do
+      dummyClass.reset_database
+      expect(dummyClass.get).to eq([])
     end
   end
 end

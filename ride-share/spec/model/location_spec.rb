@@ -1,5 +1,5 @@
-require_relative '../../model/location'
-require_relative '../spec_helper'
+require './spec/spec_helper'
+
 RSpec.describe Location do
   let(:attrs) {{x_coordinate: 0, y_coordinate: 0}}
   subject {described_class.new(attrs)}

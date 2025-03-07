@@ -1,4 +1,5 @@
-require_relative '../db/database'
+require 'db/database'
+
 class User
   include Database
 
