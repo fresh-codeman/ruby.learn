@@ -2,7 +2,8 @@ require './spec/spec_helper'
 
 RSpec.describe Ride do
   let(:ride_id) {'R1'}
-  subject { described_class.new(ride_id) }
+  let(:ride_attrs) {{id: ride_id}}
+  subject { described_class.new(ride_attrs) }
 
   describe '#initialize' do
     it 'creates instance' do

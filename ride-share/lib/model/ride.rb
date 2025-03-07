@@ -9,8 +9,8 @@ end
 class Ride
   include Database  
   attr_reader :id, :status, :driver, :rider, :destination_location, :time_taken
-  def initialize(id)
-    @id = id
+  def initialize(attrs)
+    @id = attrs[:id]
     @driver = nil
     @rider = nil
     @driver_source_location = nil

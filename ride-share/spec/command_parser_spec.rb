@@ -97,7 +97,7 @@ RSpec.describe CommandParser do
           action: :start_ride,
           params: {
             ride_id: 'R1',
-            matched_driver_index: 1,
+            selected_driver_index: 1,
             rider_id: 'R'
           }
         }
@@ -109,7 +109,7 @@ RSpec.describe CommandParser do
   
       it 'returns correct params values' do
         expect(executed_command[:params][:ride_id]).to eq(expected_command[:params][:ride_id])
-        expect(executed_command[:params][:matched_driver_index]).to be(expected_command[:params][:matched_driver_index])
+        expect(executed_command[:params][:selected_driver_index]).to be(expected_command[:params][:selected_driver_index])
         expect(executed_command[:params][:rider_id]).to eq(expected_command[:params][:rider_id])
       end
     end

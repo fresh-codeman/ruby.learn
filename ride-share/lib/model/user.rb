@@ -1,5 +1,6 @@
 require 'db/database'
 
+
 class User
   include Database
 

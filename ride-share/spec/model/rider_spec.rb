@@ -29,4 +29,25 @@ RSpec.describe Rider do
       expect(subject.matches).to be(matches)
     end
   end
+
+  describe '#riding?' do
+    it 'returns value is false' do
+      expect(subject.riding?).to be false
+    end
+  end
+
+  describe '#start_riding' do
+    it 'sets riding to true' do
+      subject.start_riding
+      expect(subject.riding?).to be true
+    end
+  end
+
+  describe '#stop_riding' do
+    it 'sets riding to true' do
+      subject.start_riding
+      subject.stop_riding
+      expect(subject.riding?).to be false
+    end
+  end
 end

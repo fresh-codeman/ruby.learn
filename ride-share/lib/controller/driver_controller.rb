@@ -1,5 +1,4 @@
-require 'model/driver'
-require 'model/location'
+require 'models_loader'
 
 module DriverController
 
@@ -9,6 +8,5 @@ module DriverController
     driver_attrs = {location: location, id: driver_id}
     driver = Driver.new(driver_attrs)
     driver.save
-    true
   end
 end

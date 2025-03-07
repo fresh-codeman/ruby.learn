@@ -14,11 +14,11 @@ RSpec.describe DriverController do
 
 describe '#add_driver' do
   it 'creates and save driver' do
-    expect(DriverController.add_driver(params)).to be true
+    expect(described_class.add_driver(params)).to be true
   end
 
   it 'store the data in db' do
-    DriverController.add_driver(params)
+    described_class.add_driver(params)
     expect(Driver.get.count).to be(1)
     expect(Driver.get.first.id).to be(driver_id)
   end

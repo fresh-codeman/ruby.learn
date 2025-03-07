@@ -1,5 +1,2 @@
-
-all_dir = Dir[File.join('model', '*.rb')]
-
-all_dir.each { |file| require file }
+Dir[File.join('model', '*.rb')].each { |file| require file }
 

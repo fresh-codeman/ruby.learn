@@ -16,7 +16,7 @@ module Config
     },
     start_ride: {
       ride_id:{index: 1, type: :string},
-      matched_driver_index: {index: 2, type: :integer},
+      selected_driver_index: {index: 2, type: :integer},
       rider_id: {index:3, type: :string}
     },
     stop_ride: {
