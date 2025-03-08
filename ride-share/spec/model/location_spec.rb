@@ -25,7 +25,7 @@ RSpec.describe Location do
   describe '#distance' do
     let(:object){build(:location, :location_20_20)}
     it 'returns distance' do
-      expect(subject.distance(object)).to eq(Math.sqrt(800))
+      expect(subject.distance(object)).to eq(Math.sqrt(800).round(2))
     end
   end
 end

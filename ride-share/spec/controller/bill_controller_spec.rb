@@ -48,7 +48,7 @@ RSpec.describe BillController do
         expect(response[:error]).to be nil
         expect(response[:data][:ride_id]).to eq(ride_id) 
         expect(response[:data][:driver_id]).to eq(driver.id) 
-        expect(response[:data][:amount]).to eq(234.60)   # TODO: actual answer is 234.64
+        expect(response[:data][:amount]).to eq(234.64)
       end
     end
   end

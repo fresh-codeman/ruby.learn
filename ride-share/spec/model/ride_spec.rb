@@ -52,7 +52,7 @@ RSpec.describe Ride do
       expect(ride.send(:destination_location)).to be(location)
       expect(ride.send(:time_taken)).to be(time_taken)
       expect(ride.send(:rider_distance).round(2)).to eq(6.40)
-      expect(ride.amount.round(2)).to eq(186.74) # TODO: actual value is 186.72
+      expect(ride.amount.round(2)).to eq(186.72)
       expect(ride.status).to be(RideStatus::COMPLETED)
     end
   end

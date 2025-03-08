@@ -8,7 +8,7 @@ class Location
   def distance(location)
     x_difference_square = (self.x_coordinate - location.x_coordinate) ** 2
     y_difference_square = (self.y_coordinate - location.y_coordinate) ** 2
-    Math.sqrt(x_difference_square + y_difference_square)
+    Math.sqrt(x_difference_square + y_difference_square).round(2)
   end
   
   private
