@@ -1,0 +1,23 @@
+
+   require_relative "./bin/main"
+    task :default do |defaults ,args|
+    main
+    end
+
+    task :console do
+    exec("./bin/console")
+    end
+
+    task :build do
+    exec("./bin/bash.sh")
+    end
+
+    # for windows 
+    # task :build do
+    #   exec("./bin/bash.bat")
+    # end
+
+    task :c => :console  # Alias "c" to "console"
+    task :s => :default  # Running "rake s" will now run main
+    task :run => :default  # Running "rake run" will now run main
+

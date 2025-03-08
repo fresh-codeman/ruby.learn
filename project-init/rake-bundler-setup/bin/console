@@ -1,0 +1,14 @@
+#!/usr/bin/env ruby
+
+require "bundler/setup"  # Load gems from the Gemfile
+require_relative "../lib/my_project"  # Load your project
+
+# Use IRB or Pry (if installed)
+if Gem.loaded_specs.has_key?("pry")
+   require "pry"
+   Pry.start
+else
+   require "irb"
+   IRB.start
+end
+   
