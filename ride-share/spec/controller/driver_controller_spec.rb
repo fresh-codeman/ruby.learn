@@ -11,14 +11,19 @@ RSpec.describe DriverController do
       y_coordinate: 
     }
   }
+  let(:call) { described_class.add_driver(params) }
 
 describe '#add_driver' do
   it 'creates and save driver' do
-    expect(described_class.add_driver(params)).to be true
+    response = call
+
+    expect(response[:data]).to be nil
+    expect(response[:error]).to be nil
   end
 
   it 'store the data in db' do
-    described_class.add_driver(params)
+    call
+    
     expect(Driver.get.count).to be(1)
     expect(Driver.get.first.id).to be(driver_id)
   end

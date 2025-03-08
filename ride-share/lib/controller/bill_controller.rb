@@ -7,6 +7,8 @@ module BillController
     raise InvalidRideError.new("Ride not exists/available for ride_id: #{ride_id}") unless ride
     driver_id = ride.driver.id
     amount = ride.amount.round(2)
-    {ride_id: , driver_id:, amount:}
+    {data: {ride_id: , driver_id:, amount:},  error:nil}
+  rescue => error
+    {error: , data: nil}
   end
 end

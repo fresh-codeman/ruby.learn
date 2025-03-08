@@ -7,10 +7,6 @@ def main
     file.readlines.each do |line|
      parsed_command = CommandParser.parse(line)
      CommandExecutor.execute(parsed_command)
-    rescue => error
-      message = error.respond_to?(:code) ? error.code : error.message
-      puts message
-      message
     end
   end
 end

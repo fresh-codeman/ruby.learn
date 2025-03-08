@@ -7,6 +7,7 @@ RSpec.describe MatchController do
   let(:door_driver) { create(:driver, :driver_at_20_20) }
   let(:far_driver) { create(:driver, :driver_at_20_20) }
   let(:params) { {rider_id: }}
+  let(:call) { described_class.match_drivers_to_rider(params) }
   before do
     rider.save
     away_driver.save
@@ -16,22 +17,22 @@ RSpec.describe MatchController do
   describe '#match_drivers_to_rider' do
     context 'when rider id is invalid' do
       let(:rider_id) {'invalid'}
-      it 'raises error' do
-        expect{MatchController.match_drivers_to_rider(params)[:driver_ids]}.to raise_error do |error|
-          expect(error).to be_a(NoDriverAvailableError)
-          expect(error.code).to eq('NO_DRIVERS_AVAILABLE')
-          expect(error.message).to eq("Invalid rider id : #{rider_id}")
-        end
+      it 'returns error' do
+        response = call
+        expect(response[:data]).to be nil 
+        expect(response[:error]).to be_a( NoDriverAvailableError)
+        expect(response[:error].code).to eq('NO_DRIVERS_AVAILABLE')
+        expect(response[:error].message).to eq("Invalid rider id : #{rider_id}")       
       end
     end
 
     context 'when all driver are away' do
-      it 'raises error' do
-        expect{MatchController.match_drivers_to_rider(params)[:driver_ids]}.to raise_error do |error|
-          expect(error).to be_a(NoDriverAvailableError)
-          expect(error.code).to eq('NO_DRIVERS_AVAILABLE')
-          expect(error.message).to eq("No drivers Available for rider_id : #{rider_id}")
-        end
+      it 'returns error' do
+        response = call
+        expect(response[:data]).to be nil 
+        expect(response[:error]).to be_a( NoDriverAvailableError)
+        expect(response[:error].code).to eq('NO_DRIVERS_AVAILABLE')
+        expect(response[:error].message).to eq("No drivers Available for rider_id : #{rider_id}")       
       end
     end
 
@@ -43,17 +44,23 @@ RSpec.describe MatchController do
         origin_driver.save
       end
       it 'returns array of driver ids' do
-        expect(MatchController.match_drivers_to_rider(params)[:driver_ids].count).to eq(2) 
+        response = call 
+
+        expect(response[:error]).to be nil 
+        expect(response[:data][:driver_ids].count).to eq(2) 
       end
       
       it 'return in ascending order of distance from rider' do
-        drivers = MatchController.match_drivers_to_rider(params)[:driver_ids]
-        expect(drivers[0]).to be(origin_driver.id)
-        expect(drivers[1]).to be(pass_driver.id)
+        response = call 
+
+        expect(response[:data][:driver_ids][0]).to be(origin_driver.id)
+        expect(response[:data][:driver_ids][1]).to be(pass_driver.id)
       end
 
       it 'sets matches to rider' do
-        driver_ids = MatchController.match_drivers_to_rider(params)[:driver_ids]
+        response = call
+        driver_ids =  response[:data][:driver_ids]
+
         expect(rider.matches.map{|driver| driver.id}).to contain_exactly(*driver_ids)
       end
     end
@@ -75,11 +82,15 @@ RSpec.describe MatchController do
         driver_c.save
       end
       it 'returns array of 5 drivers max' do
-        expect(MatchController.match_drivers_to_rider(params)[:driver_ids].count).to eq(5) 
+        response = call
+        
+        expect(response[:data][:driver_ids].count).to eq(5) 
       end
       
       it 'return in ascending order of distance from rider' do
-        driver_ids = MatchController.match_drivers_to_rider(params)[:driver_ids]
+        response = call
+        driver_ids = response[:data][:driver_ids]
+        
         expect(driver_ids[0]).to be(driver_2.id)
         expect(driver_ids[1]).to be(driver_a.id)
         expect(driver_ids[2]).to be(driver_c.id)

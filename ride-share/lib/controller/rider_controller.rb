@@ -11,5 +11,6 @@ module RiderController
     rider_attrs = {location: location, id: rider_id}
     rider = Rider.new(rider_attrs)
     rider.save
+    {data:nil, error: nil}
   end
 end

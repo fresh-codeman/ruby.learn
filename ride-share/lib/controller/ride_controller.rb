@@ -14,7 +14,9 @@ module RideController
     self.create_ride!(id, selected_driver, rider)
     self.update_driver!(selected_driver)
     self.update_rider!(rider)
-    {ride_id: id}
+    {data: {ride_id: id}, error: nil}
+  rescue => error
+    {error: , data: nil}
   end
 
   def self.stop_ride(params)
@@ -29,7 +31,9 @@ module RideController
     ride.rider.stop_riding
     ride.rider.location = location
     ride.rider.save
-    {ride_id: id}
+    {data: {ride_id: id}, error: nil}
+  rescue => error
+    {error: , data: nil}
   end
   
   private

@@ -10,6 +10,7 @@ RSpec.describe BillController do
   let(:ride_id) {ride.id}
   let(:not_completed_ride) { create(:ride) }
   let(:params) {{ride_id: }}
+  let(:call) { described_class.bill(params) }
   before do 
     create_completed_ride(ride, location, time_taken)
     not_completed_ride.save
@@ -18,31 +19,36 @@ RSpec.describe BillController do
   describe '#bill' do
     context 'when invalid ride is provided' do
       let(:ride_id) {'invalid'}
-      it 'raise error' do
-        expect{described_class.bill(params)}.to raise_error{ |error|
-          expect(error).to be_a(InvalidRideError)
-          expect(error.code).to eq('INVALID_RIDE')
-          expect(error.message).to eq("Ride not exists/available for ride_id: #{ride_id}")
-        }
+      it 'returns error object' do
+        response = call
+
+        expect(response[:data]).to be nil 
+        expect(response[:error]).to be_a(InvalidRideError)         
+        expect(response[:error].code).to eq('INVALID_RIDE')         
+        expect(response[:error].message).to eq("Ride not exists/available for ride_id: #{ride_id}")         
       end
     end
 
     context 'when ride not completed' do
       let(:ride_id) {not_completed_ride.id}
-      it 'raise error' do
-        expect{described_class.bill(params)}.to raise_error{ |error|
-          expect(error).to be_a(InvalidRideError)
-          expect(error.code).to eq('INVALID_RIDE')
-          expect(error.message).to eq("Ride not exists/available for ride_id: #{ride_id}")
-        }
+      it 'returns error object' do
+        response = call
+
+        expect(response[:data]).to be nil 
+        expect(response[:error]).to be_a(InvalidRideError)         
+        expect(response[:error].code).to eq('INVALID_RIDE')         
+        expect(response[:error].message).to eq("Ride not exists/available for ride_id: #{ride_id}")         
       end
     end
 
     context 'when params are valid' do
       it 'returns the ride_id driver_id amount' do
-        expect(described_class.bill(params)[:ride_id]).to eq(ride_id) 
-        expect(described_class.bill(params)[:driver_id]).to eq(driver.id) 
-        expect(described_class.bill(params)[:amount]).to eq(234.60)   # TODO: actual answer is 234.64
+        response = call
+
+        expect(response[:error]).to be nil
+        expect(response[:data][:ride_id]).to eq(ride_id) 
+        expect(response[:data][:driver_id]).to eq(driver.id) 
+        expect(response[:data][:amount]).to eq(234.60)   # TODO: actual answer is 234.64
       end
     end
   end

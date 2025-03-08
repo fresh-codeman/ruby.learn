@@ -11,14 +11,19 @@ RSpec.describe RiderController do
       y_coordinate: 
     }
   }
+  let(:call) { described_class.add_rider(params) }
 
   describe '#add_rider' do
     it 'creates and save rider' do
-      expect(described_class.add_rider(params)).to be true
+      response = call
+
+      expect(response[:data]).to be nil
+      expect(response[:error]).to be nil
     end
 
     it 'store the data in db' do
-      described_class.add_rider(params)
+      call
+      
       expect(Rider.get.count).to be(1)
       expect(Rider.get.first.id).to be(rider_id)
     end

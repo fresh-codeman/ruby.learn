@@ -9,5 +9,6 @@ module DriverController
     driver_attrs = {location: location, id: driver_id}
     driver = Driver.new(driver_attrs)
     driver.save
+    {data:nil, error: nil}
   end
 end

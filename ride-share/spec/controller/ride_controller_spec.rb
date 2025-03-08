@@ -8,21 +8,30 @@ RSpec.describe RideController do
   let(:params) {{ride_id:, selected_driver_index:, rider_id:}}
   
   describe '#start_ride' do
+    let(:call) { described_class.start_ride(params) }
+
     context 'when rider id is invalid' do
       let(:rider_id) {'invalid'}
-      it 'raises error' do
-        expect{described_class.start_ride(params)}.to raise_error(InvalidRideError, "Rider not exists for rider_id: #{rider_id}")
+
+      it 'returns error' do
+        response = call
+
+        expect(response[:data]).to be nil 
+        expect(response[:error]).to be_a( InvalidRideError)
+        expect(response[:error].code).to eq('INVALID_RIDE')
+        expect(response[:error].message).to eq("Rider not exists for rider_id: #{rider_id}")       
       end
     end
 
     context 'when matched driver not found' do
       before { rider.matches = []}
-      it 'raises error' do
-        expect{described_class.start_ride(params)}.to raise_error do |error|
-          expect(error).to be_a(InvalidRideError)
-          expect(error.message).to eq("#{selected_driver_index}th driver do not exist")
-          expect(error.code).to eq("INVALID_RIDE")
-        end
+      it 'returns error' do
+        response = call
+
+        expect(response[:data]).to be nil 
+        expect(response[:error]).to be_a( InvalidRideError)
+        expect(response[:error].code).to eq('INVALID_RIDE')
+        expect(response[:error].message).to eq("#{selected_driver_index}th driver do not exist")       
       end
     end
 
@@ -30,9 +39,11 @@ RSpec.describe RideController do
       let(:driver){ create(:driver) }
       let(:selected_driver){ create(:driver) }
       let(:selected_driver_index) { 2 }
+
       before { rider.matches = [driver, selected_driver] }
+
       it 'create new ride' do
-        expect{described_class.start_ride(params)}.to change(Ride, :count).by(1)
+        expect{call}.to change(Ride, :count).by(1)
         ride = Ride.get(ride_id)
         expect(ride.status).to eq(RideStatus::ONGOING)
         expect(ride.driver).to be(selected_driver)
@@ -40,20 +51,25 @@ RSpec.describe RideController do
       end
 
       it 'update driver status' do
-        described_class.start_ride(params)
+        call
+
         expect(selected_driver.driving?).to be true
         expect(Driver.get(selected_driver.id).driving?).to be true
       end
 
       it 'update rider status' do
-        described_class.start_ride(params)
+        call
+
         expect(rider.riding?).to be true
         expect(rider.matches).to be nil
         expect(Rider.get(rider.id).riding?).to be true
       end
 
       it 'returns ride_id' do
-        expect(described_class.start_ride(params)[:ride_id]). to eq(ride_id)
+        response = call
+        
+        expect(response[:error]).to be nil
+        expect(response[:data][:ride_id]). to eq(ride_id)
       end
     end
   end
@@ -66,31 +82,38 @@ RSpec.describe RideController do
     let(:destination_y_coordinate) { 3 }
     let(:time_taken_in_min) { 30 }
     let(:params) { {ride_id:, destination_x_coordinate: , destination_y_coordinate:, time_taken_in_min:}}
+    let(:call) { described_class.stop_ride(params) }
+
     context 'when ride id is invalid' do
       let(:ride_id) {'invalid'}
-      it 'raises error' do
-        expect{described_class.stop_ride(params)}.to raise_error{ |error|
-          expect(error).to be_a(InvalidRideError)
-          expect(error.message).to eq("Ride not exists/available for ride_id: #{ride_id}")
-          expect(error.code).to eq('INVALID_RIDE')
-        }
+
+      it 'returns error' do
+        response = call
+
+        expect(response[:data]).to be nil 
+        expect(response[:error]).to be_a( InvalidRideError)
+        expect(response[:error].code).to eq('INVALID_RIDE')
+        expect(response[:error].message).to eq("Ride not exists/available for ride_id: #{ride_id}")       
       end
     end
 
     context 'when ride_id is valid but not available' do
       let(:ride) {create(:ride)}
-      it 'raises error' do
-        expect{described_class.stop_ride(params)}.to raise_error{ |error|
-          expect(error).to be_a(InvalidRideError)
-          expect(error.message).to eq("Ride not exists/available for ride_id: #{ride_id}")
-          expect(error.code).to eq('INVALID_RIDE')
-        }
+
+      it 'returns error' do
+        response = call
+
+        expect(response[:data]).to be nil 
+        expect(response[:error]).to be_a( InvalidRideError)
+        expect(response[:error].code).to eq('INVALID_RIDE')
+        expect(response[:error].message).to eq("Ride not exists/available for ride_id: #{ride_id}")       
       end
     end
 
     context 'when params are valid' do
       it 'updates ride' do
-        described_class.stop_ride(params)
+        call
+
         expect(ride.status).to eq(RideStatus::COMPLETED)
         expect(ride.driver).to be(driver)
         expect(ride.send(:destination_location).x_coordinate).to eq(destination_x_coordinate)
@@ -99,19 +122,22 @@ RSpec.describe RideController do
       end
 
       it 'update driver status' do
-        expect{described_class.stop_ride(params)}.to change{driver.location}
+        expect{call}.to change{driver.location}
         expect(driver.driving?).to be false
         expect(driver.location).to be ride.send(:destination_location)
       end
 
       it 'update rider status' do
-        expect{described_class.stop_ride(params)}.to change{rider.location}
+        expect{call}.to change{rider.location}
         expect(rider.riding?).to be false
         expect(rider.location).to be ride.send(:destination_location)
       end
 
       it 'returns ride_id' do
-        expect(described_class.stop_ride(params)[:ride_id]). to eq(ride_id)
+        response = call
+        
+        expect(response[:error]).to be nil
+        expect(response[:data][:ride_id]). to eq(ride_id)
       end
     end
   end
